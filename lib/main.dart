@@ -1,3 +1,4 @@
+import 'package:despesas_pessoais/components/chart.dart';
 import 'package:despesas_pessoais/components/transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -21,6 +22,7 @@ class ExpensesApp extends StatelessWidget {
         accentColor: Colors.amber,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
+            button: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             headline6: TextStyle(
                 fontFamily: 'OpenSans',
                 fontSize: 18,
@@ -60,11 +62,44 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Transaction> _transactions = [
-    // Transaction(
-    //     id: 't1', title: 'Conta 01', value: 1229.00, date: DateTime.now()),
-    // Transaction(
-    //     id: 't2', title: 'Conta 02', value: 879.60, date: DateTime.now())
+    Transaction(
+        id: 't0',
+        title: 'Cartao de credito',
+        value: 400.00,
+        date: DateTime.now().subtract(Duration(days: 33))),
+    Transaction(
+        id: 't2',
+        title: 'conta de luz',
+        value: 879.60,
+        date: DateTime.now().subtract(Duration(days: 4))),
+    Transaction(
+        id: 't3',
+        title: 'recarga de chip',
+        value: 400.00,
+        date: DateTime.now().subtract(Duration(days: 20))),
+    Transaction(
+        id: 't4', title: 'Conta de agua', value: 879.60, date: DateTime.now()),
+    Transaction(
+        id: 't5',
+        title: 'pagamento de boleto',
+        value: 400.00,
+        date: DateTime.now()),
+    Transaction(
+        id: 't6',
+        title: 'comprar widgets',
+        value: 879.60,
+        date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
@@ -93,14 +128,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                child: Text('Gráfico'),
-                elevation: 5,
-                color: Colors.blue,
-              ),
-            ),
+            Chart(recentTransaction: _recentTransactions),
             TransactionList(_transactions),
           ],
         ),
