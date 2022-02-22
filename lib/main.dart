@@ -48,12 +48,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.now(),
+      date: date,
     );
     setState(() {
       _transactions.add(newTransaction);
@@ -61,35 +61,12 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
   }
 
-  final List<Transaction> _transactions = [
-    Transaction(
-        id: 't0',
-        title: 'Cartao de credito',
-        value: 400.00,
-        date: DateTime.now().subtract(Duration(days: 33))),
-    Transaction(
-        id: 't2',
-        title: 'conta de luz',
-        value: 879.60,
-        date: DateTime.now().subtract(Duration(days: 4))),
-    Transaction(
-        id: 't3',
-        title: 'recarga de chip',
-        value: 400.00,
-        date: DateTime.now().subtract(Duration(days: 20))),
-    Transaction(
-        id: 't4', title: 'Conta de agua', value: 879.60, date: DateTime.now()),
-    Transaction(
-        id: 't5',
-        title: 'pagamento de boleto',
-        value: 400.00,
-        date: DateTime.now()),
-    Transaction(
-        id: 't6',
-        title: 'comprar widgets',
-        value: 879.60,
-        date: DateTime.now()),
-  ];
+  final List<Transaction> _transactions = [];
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
+  }
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((tr) {
@@ -129,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Chart(recentTransaction: _recentTransactions),
-            TransactionList(_transactions),
+            TransactionList(_transactions, _removeTransaction),
           ],
         ),
       ),
