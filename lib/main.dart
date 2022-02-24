@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Transaction> _transactions = [];
+  bool _showChart = false;
   _removeTransaction(String id) {
     setState(() {
       _transactions.removeWhere((tr) => tr.id == id);
@@ -88,25 +89,63 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+    var appBar = AppBar(
+      actions: [
+        if (isLandscape)
           IconButton(
-              onPressed: () {
-                _openTransactionFormModal(context);
-              },
-              icon: Icon(Icons.add))
-        ],
-        title: Text(
-          'Despesas Pessoais',
-        ),
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+            icon: Icon(_showChart ? Icons.list : Icons.show_chart),
+          ),
+        IconButton(
+            onPressed: () {
+              _openTransactionFormModal(context);
+            },
+            icon: Icon(Icons.add)),
+      ],
+      title: Text(
+        'Despesas Pessoais',
       ),
+    );
+    var availabeHeiht = mediaQuery.size.height -
+        appBar.preferredSize.height -
+        mediaQuery.padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Chart(recentTransaction: _recentTransactions),
-            TransactionList(_transactions, _removeTransaction),
+            // if (isLandscape)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text('Exibir Gráfico'),
+            //       Switch(
+            //           value: _showChart,
+            //           onChanged: (value) {
+            //             setState(() {
+            //               _showChart = value;
+            //             });
+            //           }),
+            //     ],
+            //   ),
+            if (_showChart || !isLandscape)
+              Container(
+                height: availabeHeiht * (isLandscape ? 0.8 : 0.3),
+                child: Chart(recentTransaction: _recentTransactions),
+              ),
+            if (!_showChart || !isLandscape)
+              Container(
+                height: availabeHeiht * (isLandscape ? 1 : 0.7),
+                child: TransactionList(_transactions, _removeTransaction),
+              ),
           ],
         ),
       ),

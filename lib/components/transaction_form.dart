@@ -44,51 +44,58 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            TextField(
-              onSubmitted: (_) => _submitForm(),
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Título'),
-            ),
-            TextField(
-              onSubmitted: (_) => _submitForm(),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              controller: _valueControler,
-              decoration: InputDecoration(labelText: 'Valor (R\$)'),
-            ),
-            Row(children: [
-              Expanded(
-                child: Text(
-                  _selectedDate == null
-                      ? 'Nenhuma data selecionada!'
-                      : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
-                ),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            children: [
+              TextField(
+                onSubmitted: (_) => _submitForm(),
+                controller: _titleController,
+                decoration: InputDecoration(labelText: 'Título'),
               ),
-              FlatButton(
-                  textColor: Theme.of(context).primaryColor,
-                  onPressed: _showDatePicker,
+              TextField(
+                onSubmitted: (_) => _submitForm(),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                controller: _valueControler,
+                decoration: InputDecoration(labelText: 'Valor (R\$)'),
+              ),
+              Row(children: [
+                Expanded(
                   child: Text(
-                    'Alterar data',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ))
-            ]),
-            Container(
-                color: Theme.of(context).primaryColor,
-                height: 40,
-                width: double.infinity,
-                child: FlatButton(
-                    onPressed: _submitForm,
+                    _selectedDate == null
+                        ? 'Nenhuma data selecionada!'
+                        : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
+                  ),
+                ),
+                FlatButton(
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: _showDatePicker,
                     child: Text(
-                      'Nova Transação',
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.button?.color),
-                    )))
-          ],
+                      'Alterar data',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ))
+              ]),
+              Container(
+                  color: Theme.of(context).primaryColor,
+                  height: 40,
+                  width: double.infinity,
+                  child: FlatButton(
+                      onPressed: _submitForm,
+                      child: Text(
+                        'Nova Transação',
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.button?.color),
+                      )))
+            ],
+          ),
         ),
       ),
     );
